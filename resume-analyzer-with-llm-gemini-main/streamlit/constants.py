@@ -1,7 +1,7 @@
 import streamlit as st
 JD_PATH = "../jd_data/*"
 RESUME_PATH = "../resume_data/*/*"
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+GEMINI_API_KEY = "AIzaSyAL07nSH21GlHJMvjWbgxDhaBz24MhFHek"
 EMBEDDING_MODEL_NAME = "bert-base-uncased"
 OUTPUT_PATH = "./output/"
 JD_EMBEDDINGS_FILENAME = "jd_embeddings_large.pkl"
@@ -37,3 +37,8 @@ resume_tailoring_prompt = "Advise on how the candidate can tailor their resume: 
 relevant_skills_highlight_prompt = "Analyze this resume: <RESUME STARTS HERE> {} <RESUME ENDS HERE> and provide suggestions on restructuring it to foreground skills and experiences pertinent to the job description: <JOB DESCRIPTION STARTS HERE> {}. <JOB DESCRIPTION ENDS HERE>"
 resume_formatting_prompt = "Offer guidance on how the candidate can enhance the formatting of their resume: <RESUME STARTS HERE> {} <RESUME ENDS HERE> to improve visual appeal and readability."
 resume_length_prompt = "Recommend strategies for the candidate to adjust the length of their resume: <RESUME STARTS HERE> {} <RESUME ENDS HERE>, ensuring it is concise while remaining aligned with the requirements in the job description: <JOB DESCRIPTION STARTS HERE> {}. <JOB DESCRIPTION ENDS HERE>"
+resume_edit_prompt = """Tailor this resume: <RESUME STARTS HERE> {} <RESUME ENDS HERE> to better match the job description: <JOB DESCRIPTION STARTS HERE> {}. <JOB DESCRIPTION ENDS HERE> Use the keywords from the job description to enhance the resume. Tailor the summary of resume according to job role. Tailor the skills section. Add relevant keywords from job decription in projects. Then print the resume section wise. Don't make bullet points too lengthy in job and project decription. Keep it short, precise and use key words. Start each bullet point with a strong action verb. Emphasize quantifiable results whenever possible. While not every bullet needs the full STAR method, try to incorporate its principles. Situation: Briefly set the context. Task: Describe your responsibility.
+Action: Explain what you did.
+Result: Highlight the positive outcome.
+Conciseness: Keep bullet points concise and focused. Avoid overly long sentences.
+Consistency: Maintain consistent verb tense and formatting throughout."""
