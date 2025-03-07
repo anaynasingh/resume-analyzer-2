@@ -1,7 +1,7 @@
 import streamlit as st
 JD_PATH = "../jd_data/*"
 RESUME_PATH = "../resume_data/*/*"
-GEMINI_API_KEY = st.secrets("GEMINI_API_KEY")
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 EMBEDDING_MODEL_NAME = "bert-base-uncased"
 OUTPUT_PATH = "./output/"
 JD_EMBEDDINGS_FILENAME = "jd_embeddings_large.pkl"
