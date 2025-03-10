@@ -1,13 +1,13 @@
 import streamlit as st
 JD_PATH = "../jd_data/*"
 RESUME_PATH = "../resume_data/*/*"
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 EMBEDDING_MODEL_NAME = "bert-base-uncased"
 OUTPUT_PATH = "./output/"
 JD_EMBEDDINGS_FILENAME = "jd_embeddings_large.pkl"
 RESUME_EMBEDDINGS_FILENAME = "resume_embeddings_large.pkl"
 IS_EMBEDDINGS_CREATED = True
-GEMINI_MODEL_NAME = "gemini-1.5-pro"
+GEMINI_MODEL_NAME = "gemini-1.5-flash"
 TEMPLATE_CONTENT = """You are a helpful assistant. You do not respond as 'User' or pretend to be 'User'. You only 
 respond once as 'assistant'. 
 
