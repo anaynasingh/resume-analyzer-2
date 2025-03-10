@@ -1,21 +1,26 @@
+# Description: Streamlit app for generating resume suggestions based on a job description.
+# The app allows users to upload their resume and a job description, and provides detailed insights and actionable suggestions to improve the resume.
 import os
+import openai
 import streamlit as st
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferWindowMemory
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
+from streamlit_feedback import streamlit_feedback
 from constants import (
-    GEMINI_API_KEY, GEMINI_MODEL_NAME, TEMPLATE_CONTENT, comparison_prompt, resume_analysis_prompt,
+    OPENAI_API_KEY, TEMPLATE_CONTENT, comparison_prompt, resume_analysis_prompt,
     job_description_analysis_prompt, gap_analysis_prompt, actionable_steps_prompt, experience_enhancement_prompt,
     additional_qualifications_prompt, resume_tailoring_prompt, relevant_skills_highlight_prompt,
     resume_formatting_prompt, resume_length_prompt, resume_edit_prompt
 )
 from directory_reader import DirectoryReader
 
+# Set up OpenAI API key
+openai.api_key = st.secrets("OPENAI_API_KEY")
+
 # Set up Streamlit page
-st.set_page_config(page_title="Resume Reviewer")
-os.environ['GEMINI_API_KEY'] = GEMINI_API_KEY
+st.set_page_config(page_title="Resume Analyser")
 
 # Initialize session state for chat messages
 if "messages" not in st.session_state:
@@ -25,7 +30,7 @@ if "messages" not in st.session_state:
 
 # Sidebar for file uploads
 with st.sidebar:
-    st.title('Resume Reviewer')
+    st.title('Resume Analyser')
     st.write("Upload your resume and JD for my recommendations.")
     resume_file = st.file_uploader("Upload your resume (pdf file only)", type=["pdf"])
     jd_file = st.file_uploader("Upload your JD (txt file only)", type=["txt"])
@@ -33,6 +38,7 @@ with st.sidebar:
 # Extract content from uploaded files
 resume_content = None
 job_description_content = None
+
 if resume_file is not None and jd_file is not None:
     directory_reader = DirectoryReader("", "")
     resume_content = directory_reader.extract_text_from_pdf(resume_file)
@@ -44,35 +50,24 @@ if resume_file is not None and jd_file is not None:
 # System prompt for the chatbot
 SYSTEM_PROMPT = "\n\n" + TEMPLATE_CONTENT + "<RESUME STARTS HERE> {}. <RESUME ENDS HERE> with the job description: <JOB DESCRIPTION STARTS HERE> {}.<JOB DESCRIPTION ENDS HERE>\n\nBe crisp and clear in response. DO NOT provide the resume and job description in the response\n\n".format(resume_content, job_description_content)
 
-# Initialize the language model
-llm = ChatGoogleGenerativeAI(temperature=0.0, model=GEMINI_MODEL_NAME)
-
-# Initialize the conversation chain
-system_message = SystemMessage(content=TEMPLATE_CONTENT)
-human_message = HumanMessagePromptTemplate.from_template("{history} User:{input} Assistant:")
-prompt_template = ChatPromptTemplate(messages=[system_message, human_message], validate_template=True)
-memory = ConversationBufferWindowMemory(k=2)
-
-resume_chain = ConversationChain(
-    llm=llm,
-    prompt=prompt_template,
-    memory=memory,
-    verbose=False
-)
-
-# Function to generate a response using the language model
+# Function to generate a response using OpenAI's API
 def generate_response(prompt_input):
-    if resume_chain is not None:
-        return resume_chain.predict(input=prompt_input)
-    else:
-        return "Error: Language model is not initialized."
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini-2024-07-18",  # Use GPT-4o mini model
+            messages=[{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt_input}],
+            temperature=0.0
+        )
+        return response.choices[0].message["content"]
+    except Exception as e:
+        return f"Error: {e}"
 
 # Function to display the four buttons as part of the chatbot's message
 def display_buttons():
     st.markdown("**Please choose one of the following options or provide your own prompt:**")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("📄 Create Resume Based on Job Description"):
+        if st.button("📄 Tailor Resume Based on Job Description"):
             st.session_state.button_clicked = "Generate New Resume"
         if st.button("📄 Detailed Report"):
             st.session_state.button_clicked = "Detailed Report"
@@ -83,6 +78,8 @@ def display_buttons():
             st.session_state.button_clicked = "Skill Gap Analysis"
         if st.button("🔍 Strengths & Weaknesses"):
             st.session_state.button_clicked = "Strengths & Weaknesses"
+        if st.button("📝 Generate Cover Letter"):
+            st.session_state.button_clicked = "Generate Cover Letter"
 
 # Function to generate a detailed report
 def generate_report():
@@ -124,14 +121,19 @@ def generate_new_resume():
         return
 
     with st.spinner("Generating new resume..."):
-        # Step 1: Perform gap analysis
         gap_analysis = generate_response(gap_analysis_prompt.format(resume_content, job_description_content))
-
-        # Step 2: Generate a new resume based on the gap analysis
         new_resume = generate_response(resume_edit_prompt.format(resume_content, job_description_content))
-
-        # Step 3: Display the new resume
         st.session_state.messages.append({"role": "assistant", "content": f"**New Resume Based on Job Description:**\n\n{new_resume}"})
+
+def generate_cover_letter():
+    if not resume_content or not job_description_content:
+        st.warning("Please upload both a resume and a job description before generating the cover letter.")
+        return
+
+    with st.spinner("Generating cover letter..."):
+        cover_letter_prompt = f"Generate a professional cover letter based on the following resume and job description:\n\nResume:\n{resume_content}\n\nJob Description:\n{job_description_content}\n\nThe cover letter should be tailored to the job role, highlighting relevant skills and experience.Include details like name, address, email, phone number, linkedin, github, personal portfolio etc from resume if provided. Add details of address of company, hiring manager name, company name, job title, company address, city, state, zip code from job decription. set date as the current date. The cover letter should be concise, engaging, and professional."
+        cover_letter = generate_response(cover_letter_prompt)
+        st.session_state.messages.append({"role": "assistant", "content": f"**Generated Cover Letter:**\n\n{cover_letter}"})
 
 # Display chat messages
 for message in st.session_state.messages:
@@ -158,6 +160,8 @@ if "button_clicked" in st.session_state:
         st.session_state.messages.append({"role": "assistant", "content": result})
     elif st.session_state.button_clicked == "Generate New Resume":
         generate_new_resume()
+    elif st.session_state.button_clicked == "Generate Cover Letter":
+        generate_cover_letter()
 
     # Clear the button state and trigger a UI refresh
     del st.session_state.button_clicked
