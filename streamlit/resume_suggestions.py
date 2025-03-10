@@ -17,7 +17,7 @@ from constants import (
 from directory_reader import DirectoryReader
 
 # Set up OpenAI API key
-openai.api_key = st.secrets("OPENAI_API_KEY")
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Set up Streamlit page
 st.set_page_config(page_title="Resume Analyser")
