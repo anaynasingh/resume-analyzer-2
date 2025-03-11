@@ -1,4 +1,4 @@
-# Resume Analyzer with LLM (Gemini)
+# Resume Analyzer with LLM (OpenAI GPT 4 mini)
 
 This project is a Streamlit application that utilizes Google's Gemini LLM to analyze resumes against job descriptions, providing tailored feedback and improvement suggestions.
 
@@ -9,22 +9,24 @@ This application automates the process of resume review by:
 * **Analyzing Resumes:** Extracting relevant information from uploaded resumes.
 * **Comparing with Job Descriptions:** Comparing the resume content against provided job descriptions.
 * **Providing Feedback:** Generating personalized feedback, including skill gap analysis, actionable suggestions, and resume formatting tips.
-* **Leveraging Gemini LLM:** Using the power of Google's Gemini API to generate intelligent and insightful feedback.
+* **Leveraging Gemini LLM:** Using the power of OpenAI's GPT 4 API to generate intelligent and insightful feedback.
 
 ## Features
 
 * **Resume Upload:** Users can upload resume files.
 * **Job Description Input:** Users can input job descriptions.
-* **New Resume Generation:** The application automatically generates new resume which matches job decription.
+* **New Resume Generation:** The application automatically generates new resume which matches job description.
+* **Cover Letter Generation:** The application automatically generates a cover letter for the job description based on resume.
 * **Automated Analysis:** The application automatically analyzes the resume and job description.
 * **Detailed Report:** Generates a comprehensive report with feedback and suggestions.
 * **Skill Gap Analysis:** Highlights areas where the resume falls short of the job requirements.
 * **Actionable Suggestions:** Provides specific recommendations for improving the resume.
 * **Resume Formatting Tips:** Offers guidance on optimizing resume formatting.
+* **Strengths and Weaknesses:** Provides strengths and weaknesses of a resume.
 
 ## Technologies Used
 
-* **Google Gemini API:** Provides intelligent text analysis and generation for resume evaluation, feedback, and skill gap analysis.
+* **OpenAI GPT 4:** Provides intelligent text analysis and generation for resume evaluation, feedback, and skill gap analysis.
 * **Langchain:** For orchestrating and managing the interactions with Large Language Models (LLMs), streamlining prompt engineering, response handling, and complex workflow integration.
 * **Hugging Face Transformers (BERT):** Used for generating text embeddings, enabling semantic similarity comparisons between resumes and job descriptions.
 * **Streamlit:** For building the interactive web application interface, enabling easy deployment and user interaction, specifically for the chat application feature.
@@ -62,7 +64,7 @@ This application automates the process of resume review by:
     * Add your Google Gemini API key:
 
         ```toml
-        GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
+        CHATGPT_API_KEY = "YOUR_CHATGPT_API_KEY"
         ```
 
 5.  **Run the Application:**
