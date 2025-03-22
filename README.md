@@ -61,7 +61,7 @@ This application automates the process of resume review by:
 4.  **Set Up Streamlit Secrets:**
 
     * Create a `.streamlit/secrets.toml` file (if you are running locally) or add secrets directly to your Streamlit Cloud app settings.
-    * Add your Google Gemini API key:
+    * Add your CHATGPT API key:
 
         ```toml
         CHATGPT_API_KEY = "YOUR_CHATGPT_API_KEY"
