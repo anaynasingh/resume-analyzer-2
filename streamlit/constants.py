@@ -1,7 +1,11 @@
 import streamlit as st
 JD_PATH = "../jd_data/*"
 RESUME_PATH = "../resume_data/*/*"
+<<<<<<< Updated upstream
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+=======
+OPENAI_API_KEY = "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"
+>>>>>>> Stashed changes
 EMBEDDING_MODEL_NAME = "bert-base-uncased"
 OUTPUT_PATH = "./output/"
 JD_EMBEDDINGS_FILENAME = "jd_embeddings_large.pkl"
