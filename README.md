@@ -1,6 +1,6 @@
 # Resume Analyzer with LLM (OpenAI GPT 4 mini)
 
-This project is a Streamlit application that utilizes Google's Gemini LLM to analyze resumes against job descriptions, providing tailored feedback and improvement suggestions.
+This project is a Streamlit application that utilizes OpenAI's GPT 4 mini to analyze resumes against job descriptions, providing tailored feedback and improvement suggestions.
 
 ## Description
 
